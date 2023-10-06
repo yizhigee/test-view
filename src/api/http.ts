@@ -9,22 +9,24 @@ import {
 } from '@/enums/httpEnum'
 import type { RequestGlobalConfigType, RequestConfigType } from '@/store/modules/chartEditStore/chartEditStore.d'
 
-export const get = (url: string, params?: object) => {
+export const get = (url: string, params?: object, config?: object) => {
   return axiosInstance({
     url: url,
     method: RequestHttpEnum.GET,
-    params: params
+    params: params,
+    ...config
   })
 }
 
-export const post = (url: string, data?: object, headersType?: string) => {
+export const post = (url: string, data?: object, headersType?: string, config?: object) => {
   return axiosInstance({
     url: url,
     method: RequestHttpEnum.POST,
     data: data,
     headers: {
       'Content-Type': headersType || ContentTypeEnum.JSON
-    }
+    },
+    ...config
   })
 }
 
@@ -59,26 +61,12 @@ export const del = (url: string, params?: object) => {
 }
 
 // 获取请求函数，默认get
-export const http = (type?: RequestHttpEnum) => {
-  switch (type) {
-    case RequestHttpEnum.GET:
-      return get
-
-    case RequestHttpEnum.POST:
-      return post
-
-    case RequestHttpEnum.PATCH:
-      return patch
-
-    case RequestHttpEnum.PUT:
-      return put
-
-    case RequestHttpEnum.DELETE:
-      return del
-
-    default:
-      return get
-  }
+export const http = {
+  get,
+  post,
+  patch,
+  put,
+  del
 }
 const prefix = 'javascript:'
 // 对输入字符进行转义处理

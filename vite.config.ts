@@ -64,6 +64,16 @@ export default defineConfig({
       ext: '.gz'
     })
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://192.168.3.102:7001', //目标url
+        changeOrigin: true, //支持跨域
+        rewrite: (path) => path.replace(/^\/api/, ""), 
+          //重写路径,替换/api
+      }
+    }
+  },
   build: {
     target: 'es2015',
     outDir: OUTPUT_DIR,
