@@ -44,6 +44,7 @@ import { LayoutHeaderPro } from '@/layout/components/LayoutHeaderPro'
 import { useContextMenu } from './hooks/useContextMenu.hook'
 import { useChartEditStore } from '@/store/modules/chartEditStore/chartEditStore'
 import { useChartHistoryStore } from '@/store/modules/chartHistoryStore/chartHistoryStore'
+import { get } from '@/api/http'
 
 const chartHistoryStoreStore = useChartHistoryStore()
 const chartEditStore = useChartEditStore()
@@ -56,15 +57,19 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 const { params: { id } } = route
 if(id[0] === '2'){
-  const { componentList, requestGlobalConfig, editCanvasConfig } = JSON.parse(localStorage.getItem('info') || '{}')
-  componentList.forEach(async item => {
-    await createComponent(item.chartConfig)
-    componentInstall(item.chartConfig.chartKey, fetchChartComponent(item.chartConfig))
-    componentInstall(item.chartConfig.conKey, fetchConfigComponent(item.chartConfig))
+  get('project/detail', {
+    id: id[1]
+  }).then(res => {
+    const { componentList, requestGlobalConfig, editCanvasConfig } = JSON.parse(res.data.content)
+    componentList.forEach(async item => {
+      await createComponent(item.chartConfig)
+      componentInstall(item.chartConfig.chartKey, fetchChartComponent(item.chartConfig))
+      componentInstall(item.chartConfig.conKey, fetchConfigComponent(item.chartConfig))
+    })
+    chartEditStore.setComponentList(componentList)
+    chartEditStore.setRequestGlobalConfig(requestGlobalConfig)
+    chartEditStore.setEditCanvasAllConfig(editCanvasConfig)
   })
-  chartEditStore.setComponentList(componentList)
-  chartEditStore.setRequestGlobalConfig(requestGlobalConfig)
-  chartEditStore.setEditCanvasAllConfig(editCanvasConfig)
 }
 
 // 记录初始化
