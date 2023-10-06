@@ -19,20 +19,20 @@ import { useChartEditStore } from '@/store/modules/chartEditStore/chartEditStore
 import { syncData } from '../../ContentEdit/components/EditTools/hooks/useSyncUpdate.hook'
 import { icon } from '@/plugins'
 import { cloneDeep } from 'lodash'
-import { log } from 'console'
+import { post } from '@/api/http'
 
 const { BrowsersOutlineIcon, SendIcon, AnalyticsIcon } = icon.ionicons5
 const chartEditStore = useChartEditStore()
 
 const routerParamsInfo = useRoute()
+const { id } = routerParamsInfo.params
 
 // 预览
 const previewHandle = () => {
   const path = fetchPathByName(PreviewEnum.CHART_PREVIEW_NAME, 'href')
   if (!path) return
-  const { id } = routerParamsInfo.params
   // id 标识
-  const previewId = typeof id === 'string' ? id : id[0]
+  const previewId = typeof id === 'string' ? id : id[1] // 获取项目id
   const storageInfo = chartEditStore.getStorageInfo()
   const sessionStorageInfo = getLocalStorage(StorageEnum.GO_CHART_STORAGE_LIST) || []
 
@@ -65,12 +65,21 @@ const sendHandle = () => {
   //   onPositiveCallback: () => {}
   // })
 
-  localStorage.setItem('info', JSON.stringify({
+  // 发布项目
+  let content = JSON.stringify({
     editCanvasConfig: chartEditStore.editCanvasConfig,
     requestGlobalConfig: chartEditStore.requestGlobalConfig,
     componentList: chartEditStore.componentList
-  }))
-
+  })
+  post('add/project', {
+    id: id[0] === '2' ? id[1] : undefined,
+    content,
+    uid: '0312',
+    release: 0,
+    title: chartEditStore.getpProjectName,
+  }).then(res => {
+    window.close()
+  })
 }
 
 const btnList = [

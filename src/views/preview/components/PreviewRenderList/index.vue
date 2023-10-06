@@ -53,7 +53,7 @@ import { useLifeHandler } from '@/hooks'
 
 // 初始化数据池
 const { initDataPond, clearMittDataPondMap } = useChartDataPondFetch()
-// const chartEditStore = useChartEditStore()
+const chartEditStore = useChartEditStore() // 获取store中数据
 
 // const props = defineProps({
 //   localStorageInfo: {
@@ -61,7 +61,6 @@ const { initDataPond, clearMittDataPondMap } = useChartDataPondFetch()
 //     required: true
 //   }
 // })
-const chartEditStore = JSON.parse(localStorage.getItem('info') || '{}')
 
 // 主题色
 const themeSetting = computed(() => {

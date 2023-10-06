@@ -40,16 +40,7 @@ const chartEditStore = useChartEditStore()
 const focus = ref<boolean>(false)
 const inputInstRef = ref(null)
 
-// 根据路由 id 参数获取项目信息
-const fetchProhectInfoById = () => {
-  const id = fetchRouteParamsLocation()
-  if (id.length) {
-    return id[0]
-  }
-  return ''
-}
-
-const title = ref<string>(fetchProhectInfoById() || '')
+const title = ref<string>(chartEditStore.getpProjectName || '') // 从store中获取项目名称
 
 const comTitle = computed(() => {
   // eslint-disable-next-line vue/no-side-effects-in-computed-properties

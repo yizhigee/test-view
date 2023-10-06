@@ -2,40 +2,21 @@ import { ref } from 'vue'
 import { goDialog } from '@/utils'
 import { DialogEnum } from '@/enums/pluginEnum'
 import { ChartList } from '../../..'
+import { get } from '@/api/http'
 // 数据初始化
 export const useDataListInit = () => {
-  const list = ref<ChartList>([
-    {
-      id: 1,
-      title: '物料1-假数据不可用',
-      release: true,
-      label: '官方案例'
-    },
-    {
-      id: 2,
-      title: '物料2-假数据不可用',
-      release: false,
-      label: '官方案例'
-    },
-    {
-      id: 3,
-      title: '物料3-假数据不可用',
-      release: false,
-      label: '官方案例'
-    },
-    {
-      id: 4,
-      title: '物料4-假数据不可用',
-      release: false,
-      label: '官方案例'
-    },
-    {
-      id: 5,
-      title: '物料5-假数据不可用',
-      release: false,
-      label: '官方案例'
-    }
-  ])
+  // 从接口获取项目列表
+  const list = ref<ChartList>([])
+  get('project/list', ).then(res => {
+    list.value = res.data.map(item => {
+      return {
+        id: item.id,
+        title: item.title,
+        release: item.release == 1,
+        label: '首页模板',
+      }
+    })
+  })
 
   // 删除
   const deleteHandle = (cardData: object, index: number) => {
