@@ -161,6 +161,9 @@ export const useChartEditStore = defineStore({
     },
     getComponentList(): Array<CreateComponentType | CreateComponentGroupType> {
       return this.componentList
+    },
+    getpProjectName(): string | undefined {
+      return this.editCanvasConfig.projectName
     }
   },
   actions: {
