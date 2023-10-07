@@ -8,7 +8,7 @@ export const useDataListInit = () => {
   // 从接口获取项目列表
   const list = ref<ChartList>([])
   get('project/list', ).then(res => {
-    list.value = res.data.map(item => {
+    list.value = res.data.map((item : any) => {
       return {
         id: item.id,
         title: item.title,
